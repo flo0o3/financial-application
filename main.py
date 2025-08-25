@@ -17,6 +17,24 @@ class BaseScreen(Screen):
             font_size=24
         ))
 
+        top_buttons_layout = BoxLayout(
+            orientation="horizontal",
+            size_hint=(0.5, 0.1),  # половина ширины экрана, 10% высоты
+            pos_hint={"center_x": 0.5, "top": 0.3},
+            spacing=10
+        )
+
+        btn_top1 = Button(text="Доходы")
+        btn_top2 = Button(text="Расходы")
+
+        btn_top1.bind(on_press=lambda x: setattr(screen_manager, "current", "special"))
+        btn_top2.bind(on_press=lambda x: setattr(screen_manager, "current", "special"))
+
+
+        top_buttons_layout.add_widget(btn_top1)
+        top_buttons_layout.add_widget(btn_top2)
+        root.add_widget(top_buttons_layout)
+
         # Контейнер для кнопок снизу
         buttons_layout = BoxLayout(
             orientation="horizontal",
@@ -29,7 +47,7 @@ class BaseScreen(Screen):
         # Четыре кнопки
         btn1 = Button(text="История")
         btn2 = Button(text="Статистика")
-        btn3 = Button(text="План")
+        btn3 = Button(text="Планнирование")
         btn4 = Button(text="Настройки")
 
         # Настраиваем перключение экранов
@@ -46,6 +64,20 @@ class BaseScreen(Screen):
 
         root.add_widget(buttons_layout)
         self.add_widget(root)
+
+class SpecialScreen(Screen):
+    def __init__(self, **kwargs):
+        super().__init__(name="special", **kwargs)
+        root = FloatLayout()
+
+        root.add_widget(Label(
+            text="Это новый экран!",
+            pos_hint={"center_x": 0.5, "center_y": 0.5},
+            font_size=28
+        ))
+
+        self.add_widget(root)
+
 class MainApp(App):
     def build(self):
         sm = ScreenManager()
@@ -55,6 +87,7 @@ class MainApp(App):
         sm.add_widget(BaseScreen(sm, "stats"))
         sm.add_widget(BaseScreen(sm, "plan"))
         sm.add_widget(BaseScreen(sm, "settings"))
+        sm.add_widget(SpecialScreen())
 
         return sm
 
